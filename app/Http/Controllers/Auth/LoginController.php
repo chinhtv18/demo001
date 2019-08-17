@@ -52,7 +52,7 @@ class LoginController extends Controller
 
             if ($validator->fails()) {
                 $messages = $this->responseMessage($validator->errors()->toArray());
-                return $this->apiResponse([], $messages, parent::ERROR_STATUS);
+                return $this->apiResponse([], $messages, parent::ERROR_STATUS, Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $credentials = $request->only([
                 'email',

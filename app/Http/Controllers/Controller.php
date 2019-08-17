@@ -15,7 +15,7 @@ class Controller extends BaseController
     const SUCCESS_STATUS = 'success';
     const ERROR_STATUS = 'fail';
 
-    public function apiResponse($data = [], $message = null, $code = self::SUCCESS_STATUS, $headers = [])
+    public function apiResponse($data = [], $message = null, $status = self::SUCCESS_STATUS, $code = Response::HTTP_OK,  $headers = [])
     {
         if (empty($headers)) {
             $headers = [
@@ -26,7 +26,7 @@ class Controller extends BaseController
         $paging = array_key_exists('paging', $data) ? $data['paging'] : [];
 
         $responseData = [
-            'status' => $code,
+            'status' => $status,
             'message' => $message,
             'data' => $items
         ];
@@ -34,7 +34,7 @@ class Controller extends BaseController
         if (!empty($paging)) {
             $responseData = array_merge($responseData, $paging);
         }
-        return response()->json($responseData, Response::HTTP_OK, $headers);
+        return response()->json($responseData, $code, $headers);
     }
 
     /**
