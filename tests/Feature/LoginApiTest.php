@@ -81,7 +81,7 @@ class LoginApiTest extends TestCase
         $response->assertJsonStructure($this->apiStructure);
         $responseData = $response->json();
         $this->assertEquals($responseData['status'], self::ERROR_STATUS);
-        $this->assertEquals($responseData['message'],'The email field is required.');
+        $this->assertEquals($responseData['message']['email'],'The email field is required.');
     }
 
     public function testLoginWithPasswordIsNull()
@@ -94,7 +94,7 @@ class LoginApiTest extends TestCase
         $response->assertJsonStructure($this->apiStructure);
         $responseData = $response->json();
         $this->assertEquals($responseData['status'], self::ERROR_STATUS);
-        $this->assertEquals($responseData['message'],'The password field is required.');
+        $this->assertEquals($responseData['message']['password'],'The password field is required.');
     }
 
     public function testLoginWithInValidEmail()
@@ -107,7 +107,7 @@ class LoginApiTest extends TestCase
         $response->assertJsonStructure($this->apiStructure);
         $responseData = $response->json();
         $this->assertEquals($responseData['status'], self::ERROR_STATUS);
-        $this->assertEquals($responseData['message'],'The email must be a valid email address.');
+        $this->assertEquals($responseData['message']['email'],'The email must be a valid email address.');
     }
 
     public function testLoginWithInActiveAccount()
