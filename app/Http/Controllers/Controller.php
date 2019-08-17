@@ -36,4 +36,17 @@ class Controller extends BaseController
         }
         return response()->json($responseData, Response::HTTP_OK, $headers);
     }
+
+    /**
+     * @param $validatorErrors
+     * @return array
+     */
+    public function responseMessage($validatorErrors)
+    {
+        $messages = [];
+        foreach ($validatorErrors as $key => $message) {
+            $messages[$key] = $message[0];
+        }
+        return $messages;
+    }
 }

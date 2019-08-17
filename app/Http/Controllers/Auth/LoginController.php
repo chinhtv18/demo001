@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Requests\LoginRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
@@ -41,9 +42,18 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    public function login(LoginRequest $request)
+    public function login(Request $request)
     {
         try {
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|email',
+                'password' => 'required'
+            ]);
+
+            if ($validator->fails()) {
+                $messages = $this->responseMessage($validator->errors()->toArray());
+                return $this->apiResponse([], $messages, parent::ERROR_STATUS);
+            }
             $credentials = $request->only([
                 'email',
                 'password',
