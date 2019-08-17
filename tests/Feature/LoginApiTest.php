@@ -69,4 +69,55 @@ class LoginApiTest extends TestCase
         $this->assertEquals($responseData['status'], self::ERROR_STATUS);
         $this->assertArrayNotHasKey('userInfo', $responseData['data']);
     }
+
+    public function testLoginWithNoEmailParam()
+    {
+        $response = $this->post('/api/login', [
+            "password" => "1234"
+        ]);
+        $response->assertStatus(Response::HTTP_OK);
+        $response->assertJsonStructure($this->apiStructure);
+        $responseData = $response->json();
+        $this->assertEquals($responseData['status'], self::ERROR_STATUS);
+        $this->assertEquals($responseData['message'],'The email field is required.');
+    }
+
+    public function testLoginWithNoPasswordParam()
+    {
+        $response = $this->post('/api/login', [
+            "email" => "admin@vti.test",
+        ]);
+        $response->assertStatus(Response::HTTP_OK);
+        $response->assertJsonStructure($this->apiStructure);
+        $responseData = $response->json();
+        $this->assertEquals($responseData['status'], self::ERROR_STATUS);
+        $this->assertEquals($responseData['message'],'The password field is required.');
+    }
+
+    public function testLoginWithInValidEmail()
+    {
+        $response = $this->post('/api/login', [
+            "email" => "admin@vti",
+            "password" => "secret"
+        ]);
+        $response->assertStatus(Response::HTTP_OK);
+        $response->assertJsonStructure($this->apiStructure);
+        $responseData = $response->json();
+        $this->assertEquals($responseData['status'], self::ERROR_STATUS);
+        $this->assertEquals($responseData['message'],'The email must be a valid email address.');
+    }
+
+    public function testLoginWithInActiveAccount()
+    {
+        $response = $this->post('/api/login', [
+            'email' => 'test002@vti.test',
+            'password' => '123'
+        ]);
+        $response->assertStatus(Response::HTTP_OK);
+        $response->assertJsonStructure($this->apiStructure);
+        $responseData = $response->json();
+        $this->assertEquals($responseData['status'], self::ERROR_STATUS);
+        $this->assertEquals($responseData['message'],'Your account is inactive');
+
+    }
 }
