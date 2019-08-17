@@ -33,10 +33,9 @@ class LoginApiTest extends TestCase
     public function testLoginSuccess()
     {
         $response = $this->post('/api/login', [
-            "email" => "admin@gmail.com",
-            "password" => "123"
+            "email" => "admin@vti.test",
+            "password" => "secret"
         ]);
-
         $response->assertStatus(Response::HTTP_OK);
         $response->assertJsonStructure($this->apiStructure);
         $responseData = $response->json();
