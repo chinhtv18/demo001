@@ -16,13 +16,14 @@ class LoginApiTest extends TestCase
         'message',
         'data' => []
     ];
+
     /**
      * @test
      *
      */
     public function urlReturnOK()
     {
-        $response = $this->post('/api/login', [
+        $response = $this->json('post','/api/login', [
             "email" => "admin@gmail.com",
             "password" => "123"
         ]);
@@ -32,7 +33,7 @@ class LoginApiTest extends TestCase
 
     public function testLoginSuccess()
     {
-        $response = $this->post('/api/login', [
+        $response = $this->json('post','/api/login', [
             "email" => "admin@vti.test",
             "password" => "secret"
         ]);
@@ -46,7 +47,7 @@ class LoginApiTest extends TestCase
 
     public function testLoginWithWrongEmail()
     {
-        $response = $this->post('/api/login', [
+        $response = $this->json('post','/api/login', [
             "email" => "admin123@vti.test",
             "password" => "123"
         ]);
@@ -59,7 +60,7 @@ class LoginApiTest extends TestCase
 
     public function testLoginWithWrongPassword()
     {
-        $response = $this->post('/api/login', [
+        $response = $this->json('post', '/api/login', [
             "email" => "admin@vti.test",
             "password" => "1234"
         ]);
@@ -70,9 +71,10 @@ class LoginApiTest extends TestCase
         $this->assertArrayNotHasKey('userInfo', $responseData['data']);
     }
 
-    public function testLoginWithNoEmailParam()
+    public function testLoginWithEmailIsNull()
     {
-        $response = $this->post('/api/login', [
+        $response = $this->json('post', '/api/login', [
+            "email" => '',
             "password" => "1234"
         ]);
         $response->assertStatus(Response::HTTP_OK);
@@ -82,10 +84,11 @@ class LoginApiTest extends TestCase
         $this->assertEquals($responseData['message'],'The email field is required.');
     }
 
-    public function testLoginWithNoPasswordParam()
+    public function testLoginWithPasswordIsNull()
     {
-        $response = $this->post('/api/login', [
+        $response = $this->json('post','/api/login', [
             "email" => "admin@vti.test",
+            "password" => ''
         ]);
         $response->assertStatus(Response::HTTP_OK);
         $response->assertJsonStructure($this->apiStructure);
@@ -96,7 +99,7 @@ class LoginApiTest extends TestCase
 
     public function testLoginWithInValidEmail()
     {
-        $response = $this->post('/api/login', [
+        $response = $this->json('post', '/api/login', [
             "email" => "adminvti",
             "password" => "secret"
         ]);
@@ -109,7 +112,7 @@ class LoginApiTest extends TestCase
 
     public function testLoginWithInActiveAccount()
     {
-        $response = $this->post('/api/login', [
+        $response = $this->json('post', '/api/login', [
             'email' => 'test002@vti.test',
             'password' => '456'
         ]);
