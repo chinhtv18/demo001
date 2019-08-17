@@ -91,7 +91,7 @@ class LoginApiTest extends TestCase
             "email" => '',
             "password" => "1234"
         ]);
-        $response->assertStatus(Response::HTTP_OK);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
         $response->assertJsonStructure($this->apiStructure);
         $responseData = $response->json();
         $this->assertEquals($responseData['status'], self::ERROR_STATUS);
@@ -104,7 +104,7 @@ class LoginApiTest extends TestCase
             "email" => "admin@vti.test",
             "password" => ''
         ]);
-        $response->assertStatus(Response::HTTP_OK);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
         $response->assertJsonStructure($this->apiStructure);
         $responseData = $response->json();
         $this->assertEquals($responseData['status'], self::ERROR_STATUS);
@@ -117,7 +117,7 @@ class LoginApiTest extends TestCase
             "email" => "adminvti",
             "password" => "secret"
         ]);
-        $response->assertStatus(Response::HTTP_OK);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
         $response->assertJsonStructure($this->apiStructure);
         $responseData = $response->json();
         $this->assertEquals($responseData['status'], self::ERROR_STATUS);
