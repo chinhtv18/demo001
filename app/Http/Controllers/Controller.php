@@ -26,7 +26,7 @@ class Controller extends BaseController
         $paging = array_key_exists('paging', $data) ? $data['paging'] : [];
 
         $responseData = [
-            'code' => $code,
+            'status' => $code,
             'message' => $message,
             'data' => $items
         ];
