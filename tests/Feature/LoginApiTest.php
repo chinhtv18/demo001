@@ -97,7 +97,7 @@ class LoginApiTest extends TestCase
     public function testLoginWithInValidEmail()
     {
         $response = $this->post('/api/login', [
-            "email" => "admin@vti",
+            "email" => "adminvti",
             "password" => "secret"
         ]);
         $response->assertStatus(Response::HTTP_OK);
@@ -111,7 +111,7 @@ class LoginApiTest extends TestCase
     {
         $response = $this->post('/api/login', [
             'email' => 'test002@vti.test',
-            'password' => '123'
+            'password' => '456'
         ]);
         $response->assertStatus(Response::HTTP_OK);
         $response->assertJsonStructure($this->apiStructure);
