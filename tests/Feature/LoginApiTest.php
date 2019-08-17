@@ -16,13 +16,14 @@ class LoginApiTest extends TestCase
         'message',
         'data' => []
     ];
+
     /**
      * @test
      *
      */
     public function urlReturnOK()
     {
-        $response = $this->post('/api/login', [
+        $response = $this->json('post','/api/login', [
             "email" => "admin@gmail.com",
             "password" => "123"
         ]);
@@ -32,7 +33,7 @@ class LoginApiTest extends TestCase
 
     public function testLoginSuccess()
     {
-        $response = $this->post('/api/login', [
+        $response = $this->json('post','/api/login', [
             "email" => "admin@vti.test",
             "password" => "secret"
         ]);
@@ -46,7 +47,7 @@ class LoginApiTest extends TestCase
 
     public function testLoginWithWrongEmail()
     {
-        $response = $this->post('/api/login', [
+        $response = $this->json('post','/api/login', [
             "email" => "admin123@vti.test",
             "password" => "123"
         ]);
@@ -59,7 +60,7 @@ class LoginApiTest extends TestCase
 
     public function testLoginWithWrongPassword()
     {
-        $response = $this->post('/api/login', [
+        $response = $this->json('post', '/api/login', [
             "email" => "admin@vti.test",
             "password" => "1234"
         ]);
