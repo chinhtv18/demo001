@@ -51,7 +51,7 @@ class LoginController extends Controller
             if ($token = auth('api')->attempt($credentials)) {
                 /** @var User $user */
                 $user = auth('api')->user();
-                if ($user->activated !== User::STATUS_ACTIVE) {
+                if ($user->is_active !== User::STATUS_ACTIVE) {
                     auth()->logout();
                     return $this->apiResponse([], 'Your account is inactive', parent::ERROR_STATUS);
                 }
