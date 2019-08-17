@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Http\Requests\LoginRequest;
+use App\Models\User;
 
 class LoginController extends Controller
 {
@@ -39,7 +41,7 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
         try {
             $credentials = $request->only([
@@ -49,6 +51,10 @@ class LoginController extends Controller
             if ($token = auth('api')->attempt($credentials)) {
                 /** @var User $user */
                 $user = auth('api')->user();
+                if ($user->activated !== User::STATUS_ACTIVE) {
+                    auth()->logout();
+                    return $this->apiResponse([], 'Your account is inactive', parent::ERROR_STATUS);
+                }
                 $successResponse = array(
                     'userInfo' => $user,
                     'access_token' => 'Bearer ' . $token,

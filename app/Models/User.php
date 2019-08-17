@@ -11,6 +11,8 @@ class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
 
+    const STATUS_ACTIVE = 1;
+
     /**
      * The attributes that are mass assignable.
      *
