@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class LoginController extends Controller
 {
@@ -35,5 +37,29 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    public function login(Request $request)
+    {
+        try {
+            $credentials = $request->only([
+                'email',
+                'password',
+            ]);
+            if ($token = auth('api')->attempt($credentials)) {
+                /** @var User $user */
+                $user = auth('api')->user();
+                $successResponse = array(
+                    'userInfo' => $user,
+                    'access_token' => 'Bearer ' . $token,
+                    'token_type' => 'bearer',
+                );
+                return $this->apiResponse($successResponse);
+            }
+            return $this->apiResponse([], 'Username or password is incorrect', parent::ERROR_STATUS);
+        } catch (\Exception $ex) {
+
+            return response()->json($ex->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }
