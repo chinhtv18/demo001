@@ -71,45 +71,6 @@ class LoginApiTest extends TestCase
         $this->assertArrayNotHasKey('userInfo', $responseData['data']);
     }
 
-    public function testLoginWithEmailIsNull()
-    {
-        $response = $this->json('post', '/api/login', [
-            "email" => '',
-            "password" => "1234"
-        ]);
-        $response->assertStatus(Response::HTTP_OK);
-        $response->assertJsonStructure($this->apiStructure);
-        $responseData = $response->json();
-        $this->assertEquals($responseData['status'], self::ERROR_STATUS);
-        $this->assertEquals($responseData['message'],'The email field is required.');
-    }
-
-    public function testLoginWithPasswordIsNull()
-    {
-        $response = $this->json('post','/api/login', [
-            "email" => "admin@vti.test",
-            "password" => ''
-        ]);
-        $response->assertStatus(Response::HTTP_OK);
-        $response->assertJsonStructure($this->apiStructure);
-        $responseData = $response->json();
-        $this->assertEquals($responseData['status'], self::ERROR_STATUS);
-        $this->assertEquals($responseData['message'],'The password field is required.');
-    }
-
-    public function testLoginWithInValidEmail()
-    {
-        $response = $this->json('post', '/api/login', [
-            "email" => "adminvti",
-            "password" => "secret"
-        ]);
-        $response->assertStatus(Response::HTTP_OK);
-        $response->assertJsonStructure($this->apiStructure);
-        $responseData = $response->json();
-        $this->assertEquals($responseData['status'], self::ERROR_STATUS);
-        $this->assertEquals($responseData['message'],'The email must be a valid email address.');
-    }
-
     public function testLoginWithInActiveAccount()
     {
         $response = $this->json('post', '/api/login', [
@@ -122,5 +83,44 @@ class LoginApiTest extends TestCase
         $this->assertEquals($responseData['status'], self::ERROR_STATUS);
         $this->assertEquals($responseData['message'],'Your account is inactive');
 
+    }
+
+    public function testLoginWithEmailIsNull()
+    {
+        $response = $this->json('post', '/api/login', [
+            "email" => '',
+            "password" => "1234"
+        ]);
+        $response->assertStatus(Response::HTTP_OK);
+        $response->assertJsonStructure($this->apiStructure);
+        $responseData = $response->json();
+        $this->assertEquals($responseData['status'], self::ERROR_STATUS);
+        $this->assertEquals($responseData['message']['email'],'The email field is required.');
+    }
+
+    public function testLoginWithPasswordIsNull()
+    {
+        $response = $this->json('post','/api/login', [
+            "email" => "admin@vti.test",
+            "password" => ''
+        ]);
+        $response->assertStatus(Response::HTTP_OK);
+        $response->assertJsonStructure($this->apiStructure);
+        $responseData = $response->json();
+        $this->assertEquals($responseData['status'], self::ERROR_STATUS);
+        $this->assertEquals($responseData['message']['password'],'The password field is required.');
+    }
+
+    public function testLoginWithInValidEmail()
+    {
+        $response = $this->json('post', '/api/login', [
+            "email" => "adminvti",
+            "password" => "secret"
+        ]);
+        $response->assertStatus(Response::HTTP_OK);
+        $response->assertJsonStructure($this->apiStructure);
+        $responseData = $response->json();
+        $this->assertEquals($responseData['status'], self::ERROR_STATUS);
+        $this->assertEquals($responseData['message']['email'],'The email must be a valid email address.');
     }
 }
