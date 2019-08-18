@@ -9,13 +9,6 @@ use Illuminate\Http\Response;
 
 class LoginApiTest extends TestCase
 {
-    const SUCCESS_STATUS = 'success';
-    const ERROR_STATUS = 'fail';
-    protected $apiStructure = [
-        'status',
-        'message',
-        'data' => []
-    ];
 
     /**
      * @test
