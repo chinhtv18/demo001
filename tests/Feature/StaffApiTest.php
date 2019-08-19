@@ -57,7 +57,7 @@ class StaffApiTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
         $response->assertJsonStructure($this->apiStructure);
         $responseData = $response->json();
-        $this->assertEquals($responseData['status'], self::SUCCESS_STATUS);
+        $this->assertEquals($responseData['status'], self::ERROR_STATUS);
         $this->assertEquals($responseData['message'], 'Staff not found');
     }
 
@@ -82,7 +82,8 @@ class StaffApiTest extends TestCase
         $response->assertJsonStructure($this->apiStructure);
         $responseData = $response->json();
         $this->assertEquals($responseData['status'], self::SUCCESS_STATUS);
-        $this->assertEquals(3, count($responseData['data']));
+        $staffList = $this->getStaffList();
+        $this->assertEquals($staffList->count(), count($responseData['data']));
     }
 
     public function testGetStaffDetailWithUnAuthorize()
@@ -203,7 +204,7 @@ class StaffApiTest extends TestCase
         $response->assertJsonStructure($this->apiStructure);
         $responseData = $response->json();
         $this->assertEquals($responseData['status'], self::ERROR_STATUS);
-        $this->assertEquals($responseData['message']['first_name'], 'The last name field is required.');
+        $this->assertEquals($responseData['message']['last_name'], 'The last name field is required.');
     }
 
     public function testUpdateStaffWithUnAuthorize()
@@ -288,7 +289,7 @@ class StaffApiTest extends TestCase
         unset($staffData['id']);
         $staffDataOther = $this->getValidStaff($id);
         $staffData['email'] = $staffDataOther->email;
-        $response  = $this->json('put', '/api/staffs/' . $id, $staffData, ['Authorization' => $token]);
+        $response = $this->json('put', '/api/staffs/' . $id, $staffData, ['Authorization' => $token]);
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
         $response->assertJsonStructure($this->apiStructure);
         $responseData = $response->json();
@@ -324,7 +325,7 @@ class StaffApiTest extends TestCase
         $response->assertJsonStructure($this->apiStructure);
         $responseData = $response->json();
         $this->assertEquals($responseData['status'], self::ERROR_STATUS);
-        $this->assertEquals($responseData['message']['first_name'],'The last name field is required.');
+        $this->assertEquals($responseData['message']['last_name'],'The last name field is required.');
     }
 
     public function getToken()
@@ -341,11 +342,16 @@ class StaffApiTest extends TestCase
     private function getValidStaff($id = null)
     {
         if ($id) {
-            $staff = Staff::query()->orderBy('id', 'desc')->first();
+            $staff = Staff::query()->where('id', '!=', $id)->orderBy('id', 'desc')->first();
         } else {
-            $staff = Staff::query()->where('id', '<>', $id)->orderBy('id', 'desc')->first();
+            $staff = Staff::query()->orderBy('id', 'desc')->first();
         }
         return $staff;
+    }
+
+    private function getStaffList()
+    {
+        return Staff::query()->get();
     }
 
     private function getStaffData()
