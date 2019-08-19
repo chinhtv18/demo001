@@ -184,26 +184,26 @@ class StaffApiTest extends TestCase
     {
         $token = static::$token;
         $staffData = $this->getStaffData();
-        unset($staffData['first_name']);
+        $staffData['first_name'] = '';
         $response  = $this->json('post', '/api/staffs', $staffData, ['Authorization' => $token]);
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
         $response->assertJsonStructure($this->apiStructure);
         $responseData = $response->json();
         $this->assertEquals($responseData['status'], self::ERROR_STATUS);
-        $this->assertEquals($responseData['message']['first_name'], 'The first_name field is required.');
+        $this->assertEquals($responseData['message']['first_name'], 'The first name field is required.');
     }
 
     public function testCreateStaffWithLastNameIsNull()
     {
         $token = static::$token;
         $staffData = $this->getStaffData();
-        unset($staffData['first_name']);
+        $staffData['last_name'] = '';
         $response  = $this->json('post', '/api/staffs', $staffData, ['Authorization' => $token]);
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
         $response->assertJsonStructure($this->apiStructure);
         $responseData = $response->json();
         $this->assertEquals($responseData['status'], self::ERROR_STATUS);
-        $this->assertEquals($responseData['message']['first_name'], 'The first_name field is required.');
+        $this->assertEquals($responseData['message']['first_name'], 'The last name field is required.');
     }
 
     public function testUpdateStaffWithUnAuthorize()
@@ -309,7 +309,7 @@ class StaffApiTest extends TestCase
         $response->assertJsonStructure($this->apiStructure);
         $responseData = $response->json();
         $this->assertEquals($responseData['status'], self::ERROR_STATUS);
-        $this->assertEquals($responseData['message']['first_name'],'The first_name field is required.');
+        $this->assertEquals($responseData['message']['first_name'],'The first name field is required.');
     }
     public function testUpdateStaffWithLastNameIsNull()
     {
@@ -324,7 +324,7 @@ class StaffApiTest extends TestCase
         $response->assertJsonStructure($this->apiStructure);
         $responseData = $response->json();
         $this->assertEquals($responseData['status'], self::ERROR_STATUS);
-        $this->assertEquals($responseData['message']['first_name'],'The last_name field is required.');
+        $this->assertEquals($responseData['message']['first_name'],'The last name field is required.');
     }
 
     public function getToken()
