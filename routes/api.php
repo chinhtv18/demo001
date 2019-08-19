@@ -23,4 +23,7 @@ Route::group([
 ], function () {
     Route::get('/staffs', 'StaffController@getStaffs');
     Route::get('/staffs/{id}', 'StaffController@getStaffDetail');
+    Route::post('/staffs', 'StaffController@createStaff');
+    Route::put('/staffs/{id}', 'StaffController@updateStaff');
+    Route::delete('/staffs/{id}', 'StaffController@deleteStaff');
 });

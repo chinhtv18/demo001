@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Staff;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class StaffController extends Controller
 {
@@ -31,4 +32,20 @@ class StaffController extends Controller
            return response()->json($ex->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
        }
    }
+
+   public function createStaff(Request $request)
+   {
+
+   }
+
+   public function updateStaff(Request $request, $id)
+   {
+
+   }
+
+   public function deleteStaff(Request $request, $id)
+   {
+
+   }
+
 }
