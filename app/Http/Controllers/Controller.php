@@ -22,13 +22,10 @@ class Controller extends BaseController
                 'Content-Type' => 'application/json'
             ];
         }
-        $items = array_key_exists('items', $data) ? $data['items'] : $data;
-        $paging = array_key_exists('paging', $data) ? $data['paging'] : [];
-
         $responseData = [
             'status' => $status,
             'message' => $message,
-            'data' => $items
+            'data' => $data
         ];
 
         if (!empty($paging)) {

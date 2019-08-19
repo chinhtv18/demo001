@@ -54,12 +54,12 @@ class StaffController extends Controller
    {
        try {
            $data = $request->all();
-           $validator = $this->makeValidator($data);
+           $validator = $this->makeValidator($data, $id);
            if ($validator->fails()) {
                $messages = $this->responseMessage($validator->errors()->toArray());
                return $this->apiResponse([], $messages, parent::ERROR_STATUS, Response::HTTP_UNPROCESSABLE_ENTITY);
            }
-           $this->storeStaff($data, $id);
+           return $this->storeStaff($data, $id);
 
        } catch (\Exception $ex) {
            return response()->json($ex->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -79,7 +79,7 @@ class StaffController extends Controller
            $result = Staff::create($data);
            $message = 'create staff success';
        }
-       return $this->apiResponse($result, $message, parent::SUCCESS_STATUS);
+       return $this->apiResponse([$result], $message, parent::SUCCESS_STATUS);
    }
 
    public function deleteStaff(Request $request, $id)
@@ -95,13 +95,21 @@ class StaffController extends Controller
            return response()->json($ex->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
        }
    }
-   private function makeValidator($data) {
-       return Validator::make($data, [
-           'email' => 'required|unique:staffs|email',
-           'password' => 'required',
-           'first_name' => 'required',
-           'last_name' => 'required'
-       ]);
+   private function makeValidator($data, $id = null) {
+       if ($id) {
+           $rules = [
+               'email' => 'required|email|unique:staffs,email,' . $id,
+               'first_name' => 'required',
+               'last_name' => 'required'
+           ];
+       } else {
+           $rules = [
+               'email' => 'required|email|unique:staffs',
+               'first_name' => 'required',
+               'last_name' => 'required'
+           ];
+       }
+       return Validator::make($data, $rules);
    }
 
 }
