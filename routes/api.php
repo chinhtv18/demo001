@@ -17,13 +17,3 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::post('/login', ['as' => 'login', 'uses' => 'Auth\LoginController@login']);
-
-Route::group([
-    'middleware' => ['jwt']
-], function () {
-    Route::get('/staffs', 'StaffController@getStaffs');
-    Route::get('/staffs/{id}', 'StaffController@getStaffDetail');
-    Route::post('/staffs', 'StaffController@createStaff');
-    Route::put('/staffs/{id}', 'StaffController@updateStaff');
-    Route::delete('/staffs/{id}', 'StaffController@deleteStaff');
-});
