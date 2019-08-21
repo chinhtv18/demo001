@@ -43,7 +43,7 @@ class StaffController extends Controller
                 $messages = $this->responseMessage($validator->errors()->toArray());
                 return $this->apiResponse([], $messages, parent::ERROR_STATUS, Response::HTTP_UNPROCESSABLE_ENTITY);
             }
-            $this->storeStaff($data);
+            return $this->storeStaff($data);
 
         } catch (\Exception $ex) {
             return response()->json($ex->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
